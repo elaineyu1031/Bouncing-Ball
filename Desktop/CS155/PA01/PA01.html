@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--
+This is a simple example that shows how to create scenes with textured objects
+that cast shadows!
+-->
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>PA01</title>
+		<style>
+			body { margin: 0;}
+			canvas { width: 100%; height: 100%;}
+		</style>
+	</head>
+	<body>
+		<script src="../three.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+			// creating three cubes with different sizes
+			var cubeGeometry = new THREE.BoxGeometry( 0.5, 1.5, 3 );
+			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xf29fd4 } );
+			var cubeMesh = new THREE.Mesh( cubeGeometry, cubeMaterial );
+			cubeMesh.position.x = -2;
+			cubeMesh.position.y = 7;
+			cubeMesh.castShadow = true;
+			scene.add( cubeMesh );
+
+			var cubeGeometry1 = new THREE.BoxGeometry( 1, 2, 5 );
+			var cubeMaterial1 = new THREE.MeshLambertMaterial( { color: 0xf29fd4 } );
+			var cubeMesh1 = new THREE.Mesh( cubeGeometry1, cubeMaterial1 );
+			cubeMesh1.position.x = 10;
+			cubeMesh1.position.y = 3;
+			cubeMesh1.castShadow = true;
+			scene.add( cubeMesh1 );
+
+			var cubeGeometry2 = new THREE.BoxGeometry(2,5,5 );
+			var cubeMaterial2 = new THREE.MeshLambertMaterial( { color: 0xf29fd4 } );
+			var cubeMesh2 = new THREE.Mesh( cubeGeometry2, cubeMaterial2 );
+			cubeMesh2.position.x = -9;
+			cubeMesh2.position.y = 5;
+			cubeMesh2.castShadow = true;
+			scene.add( cubeMesh2 );
+
+			//creating a cone
+			var coneGeometry = new THREE.ConeGeometry(1,2,32);
+			var coneMaterial = new THREE.MeshLambertMaterial( { color: 0xf29fd4} );
+			coneMesh = new THREE.Mesh( coneGeometry, coneMaterial );
+			coneMesh.position.x = 0;
+			coneMesh.position.y = 5;
+			coneMesh.position.z = 5;
+			coneMesh.translateX(2);
+			coneMesh.translateY(-2);
+			coneMesh.translateZ(5);
+			coneMesh.castShadow = true;
+			scene.add( coneMesh );
+
+			//creating a cylinder
+			var cylinderGeometry= new THREE.CylinderGeometry( 1, 1, 5, 10 );
+			var cylinderMaterial = new THREE.MeshLambertMaterial( {color: 0xf29fd4} );
+			var cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+			cylinderMesh.position.x = -4;
+			cylinderMesh.position.y = 4;
+			cylinderMesh.position.z = 8;
+			cylinderMesh.castShadow = true;
+			scene.add(cylinderMesh);
+
+			//creating a sphere
+			var sphereGeometry = new THREE.SphereGeometry( 1.5, 32, 32 );
+			var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xf29fd4} );
+			var sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+			sphereMesh.position.x = 11;
+			sphereMesh.position.y = 2.5;
+			sphereMesh.position.z = 6;
+			sphereMesh.castShadow = true;
+			scene.add(sphereMesh);
+
+			//creating a ring
+			var ringGeometry = new THREE.RingGeometry( 1, 2, 5 );
+			var ringMaterial = new THREE.MeshLambertMaterial( { color: 0xf29fd4, side: THREE.DoubleSide } );
+			var ringMesh = new THREE.Mesh( ringGeometry, ringMaterial );
+			ringMesh.position.x = 0;
+	    ringMesh.position.y = 3;
+			ringMesh.position.z = 2;
+			ringMesh.castShadow = true;
+			scene.add( ringMesh );
+
+			//creating a lathe
+			var points = [];
+			for ( var i = 0; i < 2; i ++ ) {
+				points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+			}
+			var latheGeometry = new THREE.LatheGeometry( points );
+			var latheMaterial = new THREE.MeshBasicMaterial( { color: 0xf29fd4 } );
+			var lathe = new THREE.Mesh( latheGeometry, latheMaterial );
+			scene.add( lathe );
+
+
+			// creating a textured plane which receives shadows
+			var planeGeometry = new THREE.PlaneGeometry( 10, 20, 100 );
+			var texture = new THREE.TextureLoader().load( 'pic.jpg' );
+			var planeMaterial = new THREE.MeshLambertMaterial( { color: 0xaaaaaa,  map: texture ,side:THREE.DoubleSide} );
+			planeMesh = new THREE.Mesh( planeGeometry, planeMaterial );
+			scene.add(planeMesh);
+			planeMesh.position.x = -5;
+			planeMesh.position.y = 2;
+			planeMesh.position.z = 2;
+			planeMesh.rotation.x = -Math.PI/2;
+			planeMesh.receiveShadow = true;
+
+			// creating a textured plane which receives shadows
+			var planeGeometry1 = new THREE.PlaneGeometry( 15, 20, 60 );
+			var texture1 = new THREE.TextureLoader().load( 'giphy-downsized.gif' );
+			var planeMaterial1 = new THREE.MeshLambertMaterial( { color: 0xaaaaaa,  map: texture ,side:THREE.DoubleSide} );
+			planeMesh1 = new THREE.Mesh( planeGeometry1, planeMaterial1 );
+			scene.add(planeMesh1);
+			planeMesh1.position.x = 5;
+			planeMesh1.position.y = 10;
+			planeMesh1.position.z = 2;
+			planeMesh1.rotation.x = -Math.PI/2;
+			planeMesh1.receiveShadow = true;
+
+			//three lights that cast shadows
+			var light1 = new THREE.SpotLight( 0xaaaaff );
+			light1.position.set( 10, 10, 0 );
+			light1.castShadow = true;
+     	scene.add( light1 );
+			//Set up shadow properties for the light
+			light1.shadow.mapSize.width = 2048;  // default
+			light1.shadow.mapSize.height = 2048; // default
+			light1.shadow.camera.near = 0.5;       // default
+			light1.shadow.camera.far = 500      // default
+
+			var light2 = new THREE.SpotLight( 0xffaaaa );
+			light2.position.set( -100, 100, 100 );
+			light2.castShadow = true;
+     	scene.add( light2 );
+			//Set up shadow properties for the light
+			light2.shadow.mapSize.width = 2048;  // default
+			light2.shadow.mapSize.height = 2048; // default
+			light2.shadow.camera.near = 0.5;       // default
+			light2.shadow.camera.far = 500      // default
+
+			var light3 = new THREE.SpotLight( 0xffaaaa );
+			light3.position.set( -100, 100, 100 );
+			light3.castShadow = true;
+     	scene.add(light3);
+			//Set up shadow properties for the light
+			light3.shadow.mapSize.width = 2048;  // default
+			light3.shadow.mapSize.height = 2048; // default
+			light3.shadow.camera.near = 0.5;       // default
+			light3.shadow.camera.far = 500      // default
+
+			camera.position.z=20;
+			camera.position.y=4;
+			camera.lookAt(0,0,0);
+			var counter = 0;
+
+			function animate() {
+				requestAnimationFrame( animate );
+        var currentTime = (new Date()).getTime();
+				//the rotation of cube,cone,cylinder,sphere,lathe,plane
+				cubeMesh.rotation.x += 0.01;
+				cubeMesh.rotation.z += 0.1;
+				cubeMesh1.rotation.x += 0.05;
+				cubeMesh1.rotation.z += 0.05;
+				cubeMesh2.rotation.y += 0.01;
+				cubeMesh2.rotation.z += 0.1;
+				coneMesh.rotation.z += 0.01;
+				coneMesh.rotation.y += 0.01;
+				cylinderMesh.rotation.x+=0.01;
+				cylinderMesh.rotation.z+=0.05;
+				sphereMesh.rotation.y+=0.1;
+				sphereMesh.rotation.z+=0.03;
+				//the position of object ring
+				ringMesh.position.x=1*Math.sin(counter*0.06);
+				ringMesh.rotation.x+=0.1;
+				lathe.rotation.x+=0.05;
+				lathe.rotation.z+=0.01;
+				//the position of light 3
+				light3.position.x=(counter*0.5)%100;
+
+				planeMesh.position.y = 1*Math.sin(counter*0.06);
+				planeMesh1.position.y = -1*Math.sin(counter*0.06);
+        var p = 2*(1+Math.cos(counter*Math.PI/360));
+				counter++;
+				//the rotation of the camera
+        camera.rotation.z += p*0.001;
+				renderer.render( scene, camera );
+			}
+
+
+			animate();
+
+
+		</script>
+	</body>
+</html>
